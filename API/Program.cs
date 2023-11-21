@@ -1,6 +1,7 @@
 using API.Data;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,14 +14,23 @@ builder.Services.AddScoped<LogicLayer>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var url = "https://localhost:7076/api/";
-var client = new HttpClient
+
+HttpClient client = new HttpClient();
+client.BaseAddress = new Uri("https://www.github.com");
+client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+HttpResponseMessage message = client.GetAsync("wisdomtochi/repositories").Result;
+if (message.IsSuccessStatusCode)
 {
-    BaseAddress = new Uri(url)
-};
+    Console.WriteLine("Response Message:- " + message.RequestMessage);
+    Console.WriteLine("Response Header:- " + message.Content.Headers);
+}
+else
+{
+    Console.WriteLine($"{0}, {1}", (int)message.StatusCode, message.ReasonPhrase);
+}
 
-var response = await client.GetAsync("people");
-
+Console.ReadLine();
 
 var app = builder.Build();
 
