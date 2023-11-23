@@ -19,8 +19,6 @@ namespace API.Services
             };
         }
 
-
-
         public async Task<List<Person>> ReadAll()
         {
             return new List<Person> { new Person { Id = 1, Name = "Mary" },
